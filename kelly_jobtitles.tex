@@ -1,0 +1,1228 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Description Text Analytics},
+            pdfauthor={John Dixon},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Description Text Analytics}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{John Dixon}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{November 13, 2018}
+
+
+\begin{document}
+\maketitle
+
+Create model data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model_data <-}\StringTok{ }\NormalTok{data %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Country ==}\StringTok{ 'United States'}\NormalTok{) %>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(Description, ActivatedWorkOrders) %>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{( }
+      \DataTypeTok{Label =} \KeywordTok{ifelse}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(ActivatedWorkOrders),}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+    \NormalTok{) %>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(Label, Description)}
+\end{Highlighting}
+\end{Shaded}
+
+Setup H2O
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(h2o)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ----------------------------------------------------------------------
+## 
+## Your next step is to start H2O:
+##     > h2o.init()
+## 
+## For H2O package documentation, ask for help:
+##     > ??h2o
+## 
+## After starting H2O, you can use the Web UI at http://localhost:54321
+## For more information visit http://docs.h2o.ai
+## 
+## ----------------------------------------------------------------------
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'h2o'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     cor, sd, var
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     %*%, %in%, &&, ||, apply, as.factor, as.numeric, colnames,
+##     colnames<-, ifelse, is.character, is.factor, is.numeric, log,
+##     log10, log1p, log2, round, signif, trunc
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{h2o.init}\NormalTok{(}\DataTypeTok{ip =}  \StringTok{"localhost"}\NormalTok{, }\DataTypeTok{port =} \DecValTok{54321}\NormalTok{, }\DataTypeTok{nthreads =} \NormalTok{-}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  Connection successful!
+## 
+## R is connected to the H2O cluster: 
+##     H2O cluster uptime:         1 hours 47 minutes 
+##     H2O cluster timezone:       America/New_York 
+##     H2O data parsing timezone:  UTC 
+##     H2O cluster version:        3.20.0.8 
+##     H2O cluster version age:    2 months and 4 days  
+##     H2O cluster name:           H2O_started_from_R_JOHD003_okk803 
+##     H2O cluster total nodes:    1 
+##     H2O cluster total memory:   0.69 GB 
+##     H2O cluster total cores:    4 
+##     H2O cluster allowed cores:  4 
+##     H2O cluster healthy:        TRUE 
+##     H2O Connection ip:          localhost 
+##     H2O Connection port:        54321 
+##     H2O Connection proxy:       NA 
+##     H2O Internal Security:      FALSE 
+##     H2O API Extensions:         Algos, AutoML, Core V3, Core V4 
+##     R Version:                  R version 3.5.1 (2018-07-02)
+\end{verbatim}
+
+Create stop words and build the tokenize function
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{STOP_WORDS =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"ax"}\NormalTok{,}\StringTok{"i"}\NormalTok{,}\StringTok{"you"}\NormalTok{,}\StringTok{"edu"}\NormalTok{,}\StringTok{"s"}\NormalTok{,}\StringTok{"t"}\NormalTok{,}\StringTok{"m"}\NormalTok{,}\StringTok{"subject"}\NormalTok{,}\StringTok{"can"}\NormalTok{,}\StringTok{"lines"}\NormalTok{,}\StringTok{"re"}\NormalTok{,}\StringTok{"what"}\NormalTok{,}\StringTok{"there"}\NormalTok{,}\StringTok{"all"}\NormalTok{,}\StringTok{"we"}\NormalTok{,}\StringTok{"one"}\NormalTok{,}\StringTok{"the"}\NormalTok{,}\StringTok{"a"}\NormalTok{,}\StringTok{"an"}\NormalTok{,}\StringTok{"of"}\NormalTok{,}\StringTok{"or"}\NormalTok{,}\StringTok{"in"}\NormalTok{,}\StringTok{"for"}\NormalTok{,}\StringTok{"by"}\NormalTok{,}\StringTok{"on"}\NormalTok{,}\StringTok{"but"}\NormalTok{,}\StringTok{"is"}\NormalTok{,}\StringTok{"in"}\NormalTok{,}\StringTok{"a"}\NormalTok{,}\StringTok{"not"}\NormalTok{,}\StringTok{"with"}\NormalTok{,}\StringTok{"as"}\NormalTok{,}\StringTok{"was"}\NormalTok{,}\StringTok{"if"}\NormalTok{,}\StringTok{"they"}\NormalTok{,}\StringTok{"are"}\NormalTok{,}\StringTok{"this"}\NormalTok{,}\StringTok{"and"}\NormalTok{,}\StringTok{"it"}\NormalTok{,}\StringTok{"have"}\NormalTok{,}\StringTok{"from"}\NormalTok{,}\StringTok{"at"}\NormalTok{,}\StringTok{"my"}\NormalTok{,}\StringTok{"be"}\NormalTok{,}\StringTok{"by"}\NormalTok{,}\StringTok{"not"}\NormalTok{,}\StringTok{"that"}\NormalTok{,}\StringTok{"to"}\NormalTok{,}\StringTok{"from"}\NormalTok{,}\StringTok{"com"}\NormalTok{,}\StringTok{"org"}\NormalTok{,}\StringTok{"like"}\NormalTok{,}\StringTok{"likes"}\NormalTok{,}\StringTok{"so"}\NormalTok{)}
+
+\NormalTok{tokenize <-}\StringTok{ }\NormalTok{function(sentences, }\DataTypeTok{stop.words =} \NormalTok{STOP_WORDS) \{}
+  \NormalTok{tokenized <-}\StringTok{ }\KeywordTok{h2o.tokenize}\NormalTok{(sentences, }\StringTok{"}\CharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{W+"}\NormalTok{)}
+  \CommentTok{# convert to lower case}
+  \NormalTok{tokenized.lower <-}\StringTok{ }\KeywordTok{h2o.tolower}\NormalTok{(tokenized)}
+  \CommentTok{# remove short words (less than 2 characters)}
+  \NormalTok{tokenized.lengths <-}\StringTok{ }\KeywordTok{h2o.nchar}\NormalTok{(tokenized.lower)}
+  \NormalTok{tokenized.filtered <-}\StringTok{ }\NormalTok{tokenized.lower[}\KeywordTok{is.na}\NormalTok{(tokenized.lengths) ||}\StringTok{  }\NormalTok{tokenized.lengths >=}\StringTok{ }\DecValTok{2}\NormalTok{,]}
+  \CommentTok{# remove words that contain numbers}
+  \NormalTok{tokenized.words <-}\StringTok{ }\NormalTok{tokenized.filtered[}\KeywordTok{h2o.grep}\NormalTok{(}\StringTok{"[0-9]"}\NormalTok{, tokenized.filtered, }\DataTypeTok{invert =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{output.logical =} \OtherTok{TRUE}\NormalTok{),]}
+  \CommentTok{# remove stop words}
+  \NormalTok{tokenized.words[}\KeywordTok{is.na}\NormalTok{(tokenized.words) ||}\StringTok{ }\NormalTok{(!}\StringTok{ }\NormalTok{tokenized.words %in%}\StringTok{ }\NormalTok{STOP_WORDS),]}
+\NormalTok{\}}
+
+\NormalTok{predict <-}\StringTok{ }\NormalTok{function(job.description, w2v, gbm) \{}
+  \NormalTok{words <-}\StringTok{ }\KeywordTok{tokenize}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(}\KeywordTok{as.h2o}\NormalTok{(job.description)))}
+  \NormalTok{job.desc.vec <-}\StringTok{ }\KeywordTok{h2o.transform}\NormalTok{(w2v, words, }\DataTypeTok{aggregate_method =} \StringTok{"AVERAGE"}\NormalTok{)}
+  \KeywordTok{h2o.predict}\NormalTok{(gbm, job.desc.vec)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Clean up data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model_data$Description <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(model_data$Description)}
+\CommentTok{#strip out all alphanumeric characters from description}
+\NormalTok{model_data$Description <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{"[^[:alnum:] ]"}\NormalTok{, }\StringTok{""}\NormalTok{, model_data$Description)}
+\CommentTok{#first convert data frame into a h2o frame}
+\end{Highlighting}
+\end{Shaded}
+
+Create h2o dataframe
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{md_h2o <-}\StringTok{ }\KeywordTok{as.h2o}\NormalTok{(model_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+Break down descriptions into word sequencs
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Break job descriptions into sequence of words"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Break job descriptions into sequence of words"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{words <-}\StringTok{ }\KeywordTok{tokenize}\NormalTok{(md_h2o$Description)}
+\end{Highlighting}
+\end{Shaded}
+
+Build a word to vec model
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Build word2vec model"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Build word2vec model"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w2v.model <-}\StringTok{ }\KeywordTok{h2o.word2vec}\NormalTok{(words, }\DataTypeTok{sent_sample_rate =} \DecValTok{0}\NormalTok{, }\DataTypeTok{epochs =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |===                                                              |   5%
+  |                                                                       
+  |====                                                             |   7%
+  |                                                                       
+  |=====                                                            |   8%
+  |                                                                       
+  |===========                                                      |  17%
+  |                                                                       
+  |============                                                     |  18%
+  |                                                                       
+  |==============                                                   |  22%
+  |                                                                       
+  |=================                                                |  27%
+  |                                                                       
+  |==================                                               |  28%
+  |                                                                       
+  |=====================                                            |  32%
+  |                                                                       
+  |========================                                         |  37%
+  |                                                                       
+  |=========================                                        |  38%
+  |                                                                       
+  |===========================                                      |  42%
+  |                                                                       
+  |==============================                                   |  47%
+  |                                                                       
+  |===============================                                  |  48%
+  |                                                                       
+  |==================================                               |  52%
+  |                                                                       
+  |=====================================                            |  57%
+  |                                                                       
+  |======================================                           |  58%
+  |                                                                       
+  |==========================================                       |  65%
+  |                                                                       
+  |===========================================                      |  67%
+  |                                                                       
+  |============================================                     |  68%
+  |                                                                       
+  |===============================================                  |  72%
+  |                                                                       
+  |==================================================               |  77%
+  |                                                                       
+  |===================================================              |  78%
+  |                                                                       
+  |=====================================================            |  82%
+  |                                                                       
+  |========================================================         |  87%
+  |                                                                       
+  |=========================================================        |  88%
+  |                                                                       
+  |============================================================     |  92%
+  |                                                                       
+  |===============================================================  |  97%
+  |                                                                       
+  |================================================================ |  98%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w2v.model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Model Details:
+## ==============
+## 
+## H2OWordEmbeddingModel: word2vec
+## Model ID:  Word2Vec_model_R_1543196074138_177 
+## NULL
+## 
+## 
+## H2OWordEmbeddingMetrics: word2vec
+## ** Reported on training data. **
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Sanity check - find synonyms for the word 'tableau'"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Sanity check - find synonyms for the word 'tableau'"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{h2o.findSynonyms}\NormalTok{(w2v.model, }\StringTok{"tableau"}\NormalTok{, }\DataTypeTok{count =} \DecValTok{5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       synonym     score
+## 1      cognos 0.7171241
+## 2          bi 0.6902635
+## 3       obiee 0.6552354
+## 4    qlikview 0.6468017
+## 5 informatica 0.6305279
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{h2o.saveModel}\NormalTok{(w2v.model,}\DataTypeTok{path=}\StringTok{'model/w2v_model_US'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "C:\\Users\\johd003\\Desktop\\Git\\predicting-titles\\model\\w2v_model_US\\Word2Vec_model_R_1543196074138_177"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Calculate a vector for each job description"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Calculate a vector for each job description"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#w2v.model <- h2o.getModel('Word2Vec_model_R_1542169298170_1')}
+\NormalTok{job.desc.vecs <-}\StringTok{ }\KeywordTok{h2o.transform}\NormalTok{(w2v.model, words, }\DataTypeTok{aggregate_method =} \StringTok{"AVERAGE"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Prepare training & validation data (keep only job descriptions made of known words)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Prepare training & validation data (keep only job descriptions made of known words)"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{valid.job.desc <-}\StringTok{ }\NormalTok{!}\KeywordTok{is.na}\NormalTok{(job.desc.vecs$C1)}
+\NormalTok{df_h2o <-}\StringTok{ }\KeywordTok{h2o.cbind}\NormalTok{(}
+  \NormalTok{md_h2o[valid.job.desc, }\StringTok{"Label"}\NormalTok{], }
+  \NormalTok{job.desc.vecs[valid.job.desc, ])}
+
+\NormalTok{df_h2o$Label <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(df_h2o$Label)}
+\NormalTok{data.split <-}\StringTok{ }\KeywordTok{h2o.splitFrame}\NormalTok{(df_h2o, }\DataTypeTok{ratios =} \FloatTok{0.8}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Build a basic GBM model"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Build a basic GBM model"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gbm.model <-}\StringTok{ }\KeywordTok{h2o.gbm}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{names}\NormalTok{(job.desc.vecs),}
+                     \DataTypeTok{y =} \StringTok{"Label"}\NormalTok{,}
+                     \DataTypeTok{training_frame =} \NormalTok{data.split[[}\DecValTok{1}\NormalTok{]],}
+                     \DataTypeTok{validation_frame =} \NormalTok{data.split[[}\DecValTok{2}\NormalTok{]], }
+                     \DataTypeTok{balance_classes =} \OtherTok{TRUE}
+                     \NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |======                                                           |  10%
+  |                                                                       
+  |==============                                                   |  22%
+  |                                                                       
+  |=======================                                          |  36%
+  |                                                                       
+  |===============================                                  |  48%
+  |                                                                       
+  |==========================================                       |  64%
+  |                                                                       
+  |=====================================================            |  82%
+  |                                                                       
+  |================================================================ |  98%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{predict}\NormalTok{(}\StringTok{"tableau developer visualization statistics analytics"}\NormalTok{, w2v.model, gbm.model))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=================================================================| 100%
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=================================================================| 100%
+##   predict        p0        p1
+## 1       1 0.3222903 0.6777097
+## 
+## [1 row x 3 columns]
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{h2o.performance}\NormalTok{(gbm.model, }\DataTypeTok{newdata =} \NormalTok{data.split[[}\DecValTok{2}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## H2OBinomialMetrics: gbm
+## 
+## MSE:  0.2267954
+## RMSE:  0.4762304
+## LogLoss:  0.6439211
+## Mean Per-Class Error:  0.47676
+## AUC:  0.6465423
+## Gini:  0.2930846
+## 
+## Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
+##          0    1    Error        Rate
+## 0      144 2272 0.940397  =2272/2416
+## 1       44 3309 0.013123    =44/3353
+## Totals 188 5581 0.401456  =2316/5769
+## 
+## Maximum Metrics: Maximum metrics at their respective thresholds
+##                         metric threshold    value idx
+## 1                       max f1  0.386252 0.740766 355
+## 2                       max f2  0.233244 0.874444 391
+## 3                 max f0point5  0.536580 0.664748 238
+## 4                 max accuracy  0.509288 0.616225 271
+## 5                max precision  0.963558 1.000000   0
+## 6                   max recall  0.184257 1.000000 398
+## 7              max specificity  0.963558 1.000000   0
+## 8             max absolute_mcc  0.651246 0.215353 124
+## 9   max min_per_class_accuracy  0.566452 0.603042 205
+## 10 max mean_per_class_accuracy  0.584970 0.605949 185
+## 
+## Gains/Lift Table: Extract with `h2o.gainsLift(<model>, <data>)` or `h2o.gainsLift(<model>, valid=<T/F>, xval=<T/F>)`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{h2o.varimp_plot}\NormalTok{(gbm.model)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+Inspect C47 further to see what it is telling us
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{imp3 <-}\StringTok{ }\KeywordTok{h2o.varimp}\NormalTok{(gbm.model) %>%}\StringTok{ }\KeywordTok{head}\NormalTok{(}\DecValTok{3}\NormalTok{) %>%}\StringTok{ }\KeywordTok{select}\NormalTok{(variable) %>%}\StringTok{ }\KeywordTok{as.vector}\NormalTok{()}
+\KeywordTok{h2o.partialPlot}\NormalTok{(gbm.model,}\DataTypeTok{data =} \NormalTok{data.split[[}\DecValTok{1}\NormalTok{]],}\DataTypeTok{cols =} \NormalTok{imp3$variable)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |======================                                           |  33%
+  |                                                                       
+  |===========================================                      |  67%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-15-1.pdf}
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-15-2.pdf}
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-15-3.pdf}
+
+\begin{verbatim}
+## [[1]]
+## PartialDependence: Partial Dependence Plot of model GBM_model_R_1543196074138_178 on column 'C46'
+##          C46 mean_response stddev_response std_error_mean_response
+## 1  -0.836797      0.612320        0.117842                0.000778
+## 2  -0.761378      0.612320        0.117842                0.000778
+## 3  -0.685959      0.612320        0.117842                0.000778
+## 4  -0.610540      0.612320        0.117842                0.000778
+## 5  -0.535121      0.612320        0.117842                0.000778
+## 6  -0.459702      0.612320        0.117842                0.000778
+## 7  -0.384283      0.612320        0.117842                0.000778
+## 8  -0.308864      0.612320        0.117842                0.000778
+## 9  -0.233445      0.612320        0.117842                0.000778
+## 10 -0.158025      0.586658        0.113788                0.000751
+## 11 -0.082606      0.581905        0.114971                0.000759
+## 12 -0.007187      0.583966        0.116479                0.000769
+## 13  0.068232      0.583966        0.116479                0.000769
+## 14  0.143651      0.577242        0.118365                0.000781
+## 15  0.219070      0.577242        0.118365                0.000781
+## 16  0.294489      0.577242        0.118365                0.000781
+## 17  0.369908      0.577242        0.118365                0.000781
+## 18  0.445327      0.577242        0.118365                0.000781
+## 19  0.520746      0.577242        0.118365                0.000781
+## 20  0.596166      0.577242        0.118365                0.000781
+## 
+## [[2]]
+## PartialDependence: Partial Dependence Plot of model GBM_model_R_1543196074138_178 on column 'C3'
+##           C3 mean_response stddev_response std_error_mean_response
+## 1  -0.641294      0.590588        0.122769                0.000810
+## 2  -0.584026      0.590588        0.122769                0.000810
+## 3  -0.526759      0.590588        0.122769                0.000810
+## 4  -0.469492      0.590588        0.122769                0.000810
+## 5  -0.412225      0.590588        0.122769                0.000810
+## 6  -0.354957      0.590588        0.122769                0.000810
+## 7  -0.297690      0.590588        0.122769                0.000810
+## 8  -0.240423      0.590588        0.122769                0.000810
+## 9  -0.183156      0.590139        0.123350                0.000814
+## 10 -0.125889      0.589589        0.122430                0.000808
+## 11 -0.068621      0.586870        0.120450                0.000795
+## 12 -0.011354      0.585842        0.119175                0.000787
+## 13  0.045913      0.586086        0.118661                0.000783
+## 14  0.103180      0.586184        0.117458                0.000775
+## 15  0.160447      0.586184        0.117458                0.000775
+## 16  0.217715      0.642483        0.112365                0.000742
+## 17  0.274982      0.642483        0.112365                0.000742
+## 18  0.332249      0.642483        0.112365                0.000742
+## 19  0.389516      0.642483        0.112365                0.000742
+## 20  0.446784      0.642483        0.112365                0.000742
+## 
+## [[3]]
+## PartialDependence: Partial Dependence Plot of model GBM_model_R_1543196074138_178 on column 'C2'
+##           C2 mean_response stddev_response std_error_mean_response
+## 1  -0.703148      0.538793        0.132361                0.000874
+## 2  -0.623067      0.538793        0.132361                0.000874
+## 3  -0.542986      0.538793        0.132361                0.000874
+## 4  -0.462906      0.538793        0.132361                0.000874
+## 5  -0.382825      0.538793        0.132361                0.000874
+## 6  -0.302744      0.537344        0.132458                0.000874
+## 7  -0.222664      0.569299        0.122890                0.000811
+## 8  -0.142583      0.588807        0.116500                0.000769
+## 9  -0.062502      0.588573        0.116705                0.000770
+## 10  0.017578      0.588616        0.116931                0.000772
+## 11  0.097659      0.612983        0.113885                0.000752
+## 12  0.177740      0.612890        0.113709                0.000751
+## 13  0.257820      0.613257        0.113543                0.000749
+## 14  0.337901      0.613257        0.113543                0.000749
+## 15  0.417982      0.613257        0.113543                0.000749
+## 16  0.498062      0.613257        0.113543                0.000749
+## 17  0.578143      0.613257        0.113543                0.000749
+## 18  0.658224      0.613257        0.113543                0.000749
+## 19  0.738304      0.613257        0.113543                0.000749
+## 20  0.818385      0.613257        0.113543                0.000749
+\end{verbatim}
+
+Above shows us this the direction to the fill rate
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# words.asfactor().unique().ascharacter()}
+\CommentTok{# unique_words.col_names = ["Word"]}
+\NormalTok{unique_words <-}\StringTok{ }\NormalTok{words %>%}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{() %>%}\StringTok{ }\KeywordTok{unique}\NormalTok{() }
+\KeywordTok{colnames}\NormalTok{(unique_words) =}\StringTok{ 'Word'}
+\NormalTok{uniqe_words_h2o <-}\StringTok{ }\KeywordTok{as.h2o}\NormalTok{(unique_words)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{word_embeddings <-}\StringTok{ }\KeywordTok{h2o.transform}\NormalTok{(w2v.model,uniqe_words_h2o, }\DataTypeTok{aggregate_method=}\StringTok{"None"}\NormalTok{)}
+\NormalTok{word_embeddings_cmb <-}\StringTok{ }\KeywordTok{h2o.cbind}\NormalTok{(uniqe_words_h2o,word_embeddings)}
+\NormalTok{word_embeddings_cmb <-}\StringTok{ }\NormalTok{word_embeddings_cmb[!}\KeywordTok{is.na}\NormalTok{(word_embeddings_cmb$C1),]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{for (i in imp3$variable)\{}
+  \NormalTok{word_embeddings_cmb[,i] %>%}\StringTok{ }\KeywordTok{h2o.hist}\NormalTok{()}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-17-1.pdf}
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-17-2.pdf}
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-17-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{###this is most imp var positively correlated to fill rate }
+\NormalTok{word_embeddings_cmb %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{as.data.frame}\NormalTok{() %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(-C51) %>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(Word, C51) %>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                    Word      C51
+## 1    installedtechnical 2.034411
+## 2     solutionsdevelops 1.830236
+## 3           specificjob 1.767606
+## 4                  cool 1.624851
+## 5     receivingshipping 1.580916
+## 6                   bls 1.550790
+## 7                tieins 1.534019
+## 8  electricalmechanical 1.470974
+## 9                   emr 1.464366
+## 10               ethics 1.454731
+## 11              arizona 1.452049
+## 12             clearing 1.446534
+## 13           vocational 1.413612
+## 14                  ojt 1.401112
+## 15         establecidos 1.383259
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{###this is 2nd most imp var positively correlated to fill rate }
+\NormalTok{word_embeddings_cmb %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{as.data.frame}\NormalTok{() %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(-C59) %>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(Word, C59) %>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             Word      C59
+## 1             su 2.497895
+## 2   receiveissue 1.918963
+## 3   systemically 1.874448
+## 4           tels 1.715359
+## 5         subsea 1.663779
+## 6         flying 1.661047
+## 7  worldrenowned 1.585946
+## 8       holdings 1.578971
+## 9        stopper 1.543782
+## 10          ncdr 1.500503
+## 11    reassembly 1.484427
+## 12    connectors 1.467886
+## 13   periodicals 1.423762
+## 14           emm 1.417814
+## 15         sleds 1.416050
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{###this is 3nd most imp var positively correlated to fill rate }
+\NormalTok{word_embeddings_cmb %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{as.data.frame}\NormalTok{() %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{arrange}\NormalTok{(-C43) %>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(Word, C43) %>%}
+\StringTok{  }\KeywordTok{head}\NormalTok{(}\DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           Word      C43
+## 1    detecting 1.917875
+## 2    navigates 1.770741
+## 3    instructs 1.729201
+## 4  contrasting 1.545122
+## 5      adjunct 1.478118
+## 6           et 1.454866
+## 7       player 1.444907
+## 8           vi 1.442122
+## 9         dtac 1.408057
+## 10         vii 1.350809
+## 11      ethics 1.326535
+## 12      intent 1.298504
+## 13        burn 1.294826
+## 14       fault 1.286370
+## 15    measurin 1.285796
+\end{verbatim}
+
+Let's take a look at Project Manager
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model_data <-}\StringTok{ }\NormalTok{data %>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Title ==}\StringTok{ 'Project Manager'}\NormalTok{) %>%}
+\StringTok{    }\KeywordTok{select}\NormalTok{(Description, ActivatedWorkOrders) %>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{( }
+      \DataTypeTok{Label =} \KeywordTok{ifelse}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(ActivatedWorkOrders),}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+    \NormalTok{) %>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(Label, Description)}
+\end{Highlighting}
+\end{Shaded}
+
+Clean up data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model_data$Description <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(model_data$Description)}
+\CommentTok{#strip out all alphanumeric characters from description}
+\NormalTok{model_data$Description <-}\StringTok{ }\KeywordTok{gsub}\NormalTok{(}\StringTok{"[^[:alnum:] ]"}\NormalTok{, }\StringTok{""}\NormalTok{, model_data$Description)}
+\CommentTok{#first convert data frame into a h2o frame}
+\end{Highlighting}
+\end{Shaded}
+
+Create h2o dataframe
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{md_h2o <-}\StringTok{ }\KeywordTok{as.h2o}\NormalTok{(model_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+Break down descriptions into word sequencs
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Break job descriptions into sequence of words"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Break job descriptions into sequence of words"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{words <-}\StringTok{ }\KeywordTok{tokenize}\NormalTok{(md_h2o$Description)}
+\end{Highlighting}
+\end{Shaded}
+
+Build a word to vec model
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Build word2vec model"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Build word2vec model"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w2v.model <-}\StringTok{ }\KeywordTok{h2o.word2vec}\NormalTok{(words, }\DataTypeTok{sent_sample_rate =} \DecValTok{0}\NormalTok{, }\DataTypeTok{epochs =} \DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |======                                                           |  10%
+  |                                                                       
+  |=============                                                    |  20%
+  |                                                                       
+  |====================                                             |  30%
+  |                                                                       
+  |==========================                                       |  40%
+  |                                                                       
+  |================================                                 |  50%
+  |                                                                       
+  |=======================================                          |  60%
+  |                                                                       
+  |==============================================                   |  70%
+  |                                                                       
+  |====================================================             |  80%
+  |                                                                       
+  |==========================================================       |  90%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w2v.model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Model Details:
+## ==============
+## 
+## H2OWordEmbeddingModel: word2vec
+## Model ID:  Word2Vec_model_R_1543196074138_230 
+## NULL
+## 
+## 
+## H2OWordEmbeddingMetrics: word2vec
+## ** Reported on training data. **
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Sanity check - find synonyms for the word 'tableau'"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Sanity check - find synonyms for the word 'tableau'"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{h2o.findSynonyms}\NormalTok{(w2v.model, }\StringTok{"jira"}\NormalTok{, }\DataTypeTok{count =} \DecValTok{5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      synonym     score
+## 1 sharepoint 0.6378196
+## 2         ms 0.6289026
+## 3    windows 0.5648659
+## 4    layouts 0.5610674
+## 5        dlp 0.5583060
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Calculate a vector for each job description"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Calculate a vector for each job description"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#w2v.model <- h2o.getModel('Word2Vec_model_R_1542169298170_1')}
+\NormalTok{job.desc.vecs <-}\StringTok{ }\KeywordTok{h2o.transform}\NormalTok{(w2v.model, words, }\DataTypeTok{aggregate_method =} \StringTok{"AVERAGE"}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(}\StringTok{"Prepare training & validation data (keep only job descriptions made of known words)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Prepare training & validation data (keep only job descriptions made of known words)"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{valid.job.desc <-}\StringTok{ }\NormalTok{!}\KeywordTok{is.na}\NormalTok{(job.desc.vecs$C1)}
+\NormalTok{df_h2o <-}\StringTok{ }\KeywordTok{h2o.cbind}\NormalTok{(}
+  \NormalTok{md_h2o[valid.job.desc, }\StringTok{"Label"}\NormalTok{], }
+  \NormalTok{job.desc.vecs[valid.job.desc, ])}
+
+\NormalTok{df_h2o$Label <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(df_h2o$Label)}
+\NormalTok{data.split <-}\StringTok{ }\KeywordTok{h2o.splitFrame}\NormalTok{(df_h2o, }\DataTypeTok{ratios =} \FloatTok{0.8}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"Build a basic GBM model"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Build a basic GBM model"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gbm.model <-}\StringTok{ }\KeywordTok{h2o.gbm}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{names}\NormalTok{(job.desc.vecs),}
+                     \DataTypeTok{y =} \StringTok{"Label"}\NormalTok{,}
+                     \DataTypeTok{training_frame =} \NormalTok{data.split[[}\DecValTok{1}\NormalTok{]],}
+                     \DataTypeTok{validation_frame =} \NormalTok{data.split[[}\DecValTok{2}\NormalTok{]], }
+                     \DataTypeTok{balance_classes =} \OtherTok{TRUE}
+                     \NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |==============================================                   |  70%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{h2o.performance}\NormalTok{(gbm.model, }\DataTypeTok{newdata =} \NormalTok{data.split[[}\DecValTok{2}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## H2OBinomialMetrics: gbm
+## 
+## MSE:  0.2485574
+## RMSE:  0.4985553
+## LogLoss:  0.7042672
+## Mean Per-Class Error:  0.4514275
+## AUC:  0.6266685
+## Gini:  0.253337
+## 
+## Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
+##         0   1    Error      Rate
+## 0      17 122 0.877698  =122/139
+## 1       4 155 0.025157    =4/159
+## Totals 21 277 0.422819  =126/298
+## 
+## Maximum Metrics: Maximum metrics at their respective thresholds
+##                         metric threshold    value idx
+## 1                       max f1  0.248981 0.711009 233
+## 2                       max f2  0.129138 0.854839 245
+## 3                 max f0point5  0.485693 0.659398 169
+## 4                 max accuracy  0.485693 0.644295 169
+## 5                max precision  0.961734 1.000000   0
+## 6                   max recall  0.129138 1.000000 245
+## 7              max specificity  0.961734 1.000000   0
+## 8             max absolute_mcc  0.485693 0.283599 169
+## 9   max min_per_class_accuracy  0.605723 0.591195 122
+## 10 max mean_per_class_accuracy  0.485693 0.633184 169
+## 
+## Gains/Lift Table: Extract with `h2o.gainsLift(<model>, <data>)` or `h2o.gainsLift(<model>, valid=<T/F>, xval=<T/F>)`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{h2o.varimp}\NormalTok{(gbm.model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Variable Importances: 
+##   variable relative_importance scaled_importance percentage
+## 1      C29           25.360090          1.000000   0.026646
+## 2      C81           23.816919          0.939150   0.025025
+## 3      C24           23.706722          0.934804   0.024909
+## 4      C58           23.111649          0.911339   0.024284
+## 5      C78           22.864552          0.901596   0.024024
+## 
+## ---
+##     variable relative_importance scaled_importance percentage
+## 95       C75            2.298145          0.090621   0.002415
+## 96       C38            1.944019          0.076657   0.002043
+## 97       C67            1.939439          0.076476   0.002038
+## 98       C14            1.690156          0.066646   0.001776
+## 99       C39            1.630533          0.064295   0.001713
+## 100      C23            1.524709          0.060122   0.001602
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{h2o.partialPlot}\NormalTok{(gbm.model,}\DataTypeTok{data =} \NormalTok{data.split[[}\DecValTok{1}\NormalTok{]],}\DataTypeTok{cols =} \KeywordTok{c}\NormalTok{(}\StringTok{"C61"}\NormalTok{,}\StringTok{"C1"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-28-1.pdf}
+\includegraphics{kelly_jobtitles_files/figure-latex/unnamed-chunk-28-2.pdf}
+
+\begin{verbatim}
+## [[1]]
+## PartialDependence: Partial Dependence Plot of model GBM_model_R_1543196074138_231 on column 'C61'
+##          C61 mean_response stddev_response std_error_mean_response
+## 1  -0.546916      0.579712        0.257492                0.007785
+## 2  -0.500171      0.579712        0.257492                0.007785
+## 3  -0.453427      0.579712        0.257492                0.007785
+## 4  -0.406682      0.579712        0.257492                0.007785
+## 5  -0.359938      0.579712        0.257492                0.007785
+## 6  -0.313193      0.579712        0.257492                0.007785
+## 7  -0.266449      0.579712        0.257492                0.007785
+## 8  -0.219704      0.579712        0.257492                0.007785
+## 9  -0.172960      0.563190        0.262325                0.007931
+## 10 -0.126215      0.563190        0.262325                0.007931
+## 11 -0.079471      0.563190        0.262325                0.007931
+## 12 -0.032726      0.566534        0.263668                0.007972
+## 13  0.014018      0.568090        0.263937                0.007980
+## 14  0.060763      0.568090        0.263937                0.007980
+## 15  0.107507      0.567275        0.263989                0.007981
+## 16  0.154252      0.567275        0.263989                0.007981
+## 17  0.200996      0.567275        0.263989                0.007981
+## 18  0.247741      0.567275        0.263989                0.007981
+## 19  0.294485      0.567275        0.263989                0.007981
+## 20  0.341230      0.567275        0.263989                0.007981
+## 
+## [[2]]
+## PartialDependence: Partial Dependence Plot of model GBM_model_R_1543196074138_231 on column 'C1'
+##           C1 mean_response stddev_response std_error_mean_response
+## 1  -0.750989      0.568066        0.265267                0.008020
+## 2  -0.696398      0.568066        0.265267                0.008020
+## 3  -0.641806      0.568066        0.265267                0.008020
+## 4  -0.587214      0.568066        0.265267                0.008020
+## 5  -0.532623      0.568066        0.265267                0.008020
+## 6  -0.478031      0.568066        0.265267                0.008020
+## 7  -0.423439      0.568066        0.265267                0.008020
+## 8  -0.368847      0.568066        0.265267                0.008020
+## 9  -0.314256      0.568066        0.265267                0.008020
+## 10 -0.259664      0.568066        0.265267                0.008020
+## 11 -0.205072      0.568066        0.265267                0.008020
+## 12 -0.150481      0.568066        0.265267                0.008020
+## 13 -0.095889      0.570235        0.265588                0.008030
+## 14 -0.041297      0.568883        0.265958                0.008041
+## 15  0.013294      0.568883        0.265958                0.008041
+## 16  0.067886      0.567760        0.265734                0.008034
+## 17  0.122478      0.571701        0.264003                0.007982
+## 18  0.177069      0.571701        0.264003                0.007982
+## 19  0.231661      0.571701        0.264003                0.007982
+## 20  0.286253      0.571701        0.264003                0.007982
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# words.asfactor().unique().ascharacter()}
+\CommentTok{# unique_words.col_names = ["Word"]}
+\NormalTok{unique_words <-}\StringTok{ }\NormalTok{words %>%}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{() %>%}\StringTok{ }\KeywordTok{unique}\NormalTok{() }
+\KeywordTok{colnames}\NormalTok{(unique_words) =}\StringTok{ 'Word'}
+\NormalTok{uniqe_words_h2o <-}\StringTok{ }\KeywordTok{as.h2o}\NormalTok{(unique_words)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+  |                                                                       
+  |                                                                 |   0%
+  |                                                                       
+  |=================================================================| 100%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{word_embeddings <-}\StringTok{ }\KeywordTok{h2o.transform}\NormalTok{(w2v.model,uniqe_words_h2o, }\DataTypeTok{aggregate_method=}\StringTok{"None"}\NormalTok{)}
+\NormalTok{word_embeddings_cmb <-}\StringTok{ }\KeywordTok{h2o.cbind}\NormalTok{(uniqe_words_h2o,word_embeddings)}
+\NormalTok{word_embeddings_cmb <-}\StringTok{ }\NormalTok{word_embeddings_cmb[!}\KeywordTok{is.na}\NormalTok{(word_embeddings_cmb$C1),]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## this is the most important var in this PM model; these should be associated with a lower fill rate}
+\NormalTok{word_embeddings_cmb %>%}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{() %>%}\StringTok{ }\KeywordTok{arrange}\NormalTok{(-C61) %>%}\StringTok{ }\KeywordTok{select}\NormalTok{(Word, C61) %>%}\StringTok{ }\KeywordTok{head}\NormalTok{(}\DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          Word      C61
+## 1  structural 1.428764
+## 2  inspection 1.389715
+## 3   determine 1.284561
+## 4          po 1.239961
+## 5         roi 1.203722
+## 6     devices 1.179659
+## 7      damage 1.149850
+## 8      middle 1.148427
+## 9     emarket 1.065143
+## 10     lawson 1.064336
+## 11     funded 1.054787
+## 12    defects 1.039952
+## 13  machinery 1.016500
+## 14   cosmetic 1.009476
+## 15   computes 1.005083
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## this is the 2nd most important var in this PM model; these should be associated with a lower fill rate}
+\NormalTok{word_embeddings_cmb %>%}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{() %>%}\StringTok{ }\KeywordTok{arrange}\NormalTok{(-C1) %>%}\StringTok{ }\KeywordTok{select}\NormalTok{(Word, C1) %>%}\StringTok{ }\KeywordTok{head}\NormalTok{(}\DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##               Word        C1
+## 1          follows 1.0940094
+## 2    documentation 1.0023969
+## 3             epdp 0.9765350
+## 4             word 0.9187155
+## 5          operate 0.8898395
+## 6  principlesunder 0.8874974
+## 7        maintains 0.8446668
+## 8           organi 0.8313068
+## 9           follow 0.8246992
+## 10          simple 0.8065745
+## 11        notifies 0.7867734
+## 12         cgmpgdp 0.7838184
+## 13     distributes 0.7604649
+## 14         solving 0.7420758
+## 15            hard 0.7412168
+\end{verbatim}
+
+
+\end{document}

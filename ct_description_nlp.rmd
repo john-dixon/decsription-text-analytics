@@ -1,0 +1,361 @@
+---
+title: "Description Text Analytics with Cyclw Time"
+author: "John Dixon"
+date: "November 13, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(RODBC)
+library(dplyr)
+library(sqldf)
+
+if(!file.exists('req_data.zip')){
+  sqa.conn <- odbcDriverConnect('driver={SQL Server};server=amtrowsqldev05\\tab_sqa;database=AnalyticsMapping;uid=tab_reader;pwd=T*M8V/6tTO/k')
+ prd.conn <- odbcDriverConnect('driver={SQL Server};server=amtrowsqlprd20\\tab_prd;database=AnalyticsMapping;uid=tab_reader;pwd=~T]zeJ/[1)*?')
+  data <- sqlQuery(sqa.conn, "
+SELECT mr.*, RQST_POSN_DESCR
+  FROM [dbo].[waRequisition] r 
+  inner join dbo.tv_mv_Requisition mr on mr.waRequisition_ID = r.waRequisition_ID
+  where RQST_POSN_DESCR is not null 
+  and r.NBR_RQST = 1
+  and mr.Labor_Type is not null 
+  and Title is not null 
+  and r.CREAT_DT > '01/01/2018'
+  and RQST_POSN_DESCR is not null
+")
+  
+  data <- data %>% 
+  rename(Description = RQST_POSN_DESCR, 
+         LaborType = Labor_Type)
+  write.csv(data, file=gzfile("req_data.zip"))
+}  else {
+  library(readr)
+data <- read_csv("C:/Users/johd003/Desktop/Git/predicting-titles/req_data/req_data", 
+    col_types = cols(X1 = col_skip()))
+}
+head(data)
+```
+
+```{r}
+data %>% 
+    filter(!is.na(CLOSE_DT)) %>%
+    filter(STAT_MAPP == 'Closed') %>% group_by(CLOSE_RSN_MAPP) %>% summarise(N= n())%>% arrange(-N)
+```
+```{r}
+
+close_rsn_exlcusions <-
+c(
+'Neutral | Incorrect Job Title Selected',
+'Neutral | Cancelled - No Longer Needed',
+'Not Justified or Justification Missing',
+'Neutral | Duplicate Job Posting',
+'Neutral | Incorrect Job Posting Details (other than title)',
+'Neutral | Data Migration',
+'Neutral | Cancelled - Filled Internally',
+'Neutral | Cancelled - Budget'
+)
+
+close_rsn_inclusions <- setdiff(unique(closed_reqs$CLOSE_RSN_MAPP),close_rsn_exlcusions)
+
+close_rsn_inclusions
+```
+
+Create model data 
+```{r}
+model_data <- data %>% 
+  filter(!is.na(CLOSE_DT),
+  STAT_MAPP == 'Closed',
+  CLOSE_RSN_MAPP %in% close_rsn_inclusions) %>%
+  select(Description, Avg_CT_Total) %>%
+    mutate( 
+      Label = ifelse(Avg_CT_Total <= 30,1,0), 
+      Label = ifelse(is.na(Avg_CT_Total),0,1)
+    ) %>%
+  select(Label, Description)
+```
+
+Setup H2O
+```{r}
+library(h2o)
+h2o.init(ip =  "localhost", port = 54321, nthreads = -1)
+```
+
+Create stop words and build the tokenize function
+```{r Define Functions}
+STOP_WORDS = c("ax","i","you","edu","s","t","m","subject","can","lines","re","what","there","all","we","one","the","a","an","of","or","in","for","by","on","but","is","in","a","not","with","as","was","if","they","are","this","and","it","have","from","at","my","be","by","not","that","to","from","com","org","like","likes","so")
+
+tokenize <- function(sentences, stop.words = STOP_WORDS) {
+  tokenized <- h2o.tokenize(sentences, "\\\\W+")
+  # convert to lower case
+  tokenized.lower <- h2o.tolower(tokenized)
+  # remove short words (less than 2 characters)
+  tokenized.lengths <- h2o.nchar(tokenized.lower)
+  tokenized.filtered <- tokenized.lower[is.na(tokenized.lengths) ||  tokenized.lengths >= 2,]
+  # remove words that contain numbers
+  tokenized.words <- tokenized.filtered[h2o.grep("[0-9]", tokenized.filtered, invert = TRUE, output.logical = TRUE),]
+  # remove stop words
+  tokenized.words[is.na(tokenized.words) || (! tokenized.words %in% STOP_WORDS),]
+}
+
+predict <- function(job.description, w2v, gbm) {
+  words <- tokenize(as.character(as.h2o(job.description)))
+  job.desc.vec <- h2o.transform(w2v, words, aggregate_method = "AVERAGE")
+  h2o.predict(gbm, job.desc.vec)
+}
+
+score_words <- function(input_words, input_w2v){
+  unique_words <- input_words %>% 
+    as.data.frame() %>% 
+    unique() %>% 
+    as.h2o()
+
+  colnames(unique_words) = 'Word'
+  rm(scored_words_df)
+  scored_words_df <<- h2o.transform(input_w2v,uniqe_words_h2o,aggregate_method="None") %>%
+    h2o.cbind(uniqe_words_h2o) %>%
+    as.data.frame() 
+}
+
+polar_fit_words <- function(fit_model,nvars,nwords){
+  impvars <- h2o.varimp(fit_model) %>% head(nvars) %>% select(variable) %>% as.vector()
+  for (i in unique(impvars$variable)){ 
+     topn <-scored_words_df %>%
+        select(Word,i) %>% 
+        filter(!is.na(i))
+     topn <- topn[order(-topn[,2]),]
+     
+    bottomn <-scored_words_df %>%
+          select(Word,i) %>% 
+          filter(!is.na(i))
+    bottomn <- bottomn[order(bottomn[,2]),]
+    print('Partial Dependecy Plot: what direction is the var moving?')
+    print(h2o.partialPlot(fit_model,data = data.split[[1]],cols = i))
+    print('Top N Words')
+    print(topn %>% head(nwords))
+    print('Bottom N Words')
+    print(bottomn %>% head(nwords))
+  }
+}
+
+polar_fit_words(gbm.model,1,10)
+```
+
+Clean up data
+```{r}
+model_data$Description <- as.character(model_data$Description)
+#strip out all alphanumeric characters from description
+model_data$Description <- gsub("[^[:alnum:] ]", "", model_data$Description)
+#first convert data frame into a h2o frame
+```
+
+Create h2o dataframe
+```{r}
+md_h2o <- as.h2o(model_data)
+```
+
+Break down descriptions into word sequencs 
+```{r}
+print("Break job descriptions into sequence of words")
+words <- tokenize(md_h2o$Description)
+```
+
+Build a word to vec model 
+```{r}
+
+print("Build word2vec model")
+w2v.model <- h2o.word2vec(words, sent_sample_rate = 0, epochs = 10)
+w2v.model
+print("Sanity check - find synonyms for the word 'tableau'")
+print(h2o.findSynonyms(w2v.model, "tableau", count = 5))
+```
+
+
+```{r}
+h2o.saveModel(w2v.model,path='model/w2v_model_US')
+```
+
+```{r}
+print("Calculate a vector for each job description")
+#w2v.model <- h2o.getModel('Word2Vec_model_R_1542169298170_1')
+job.desc.vecs <- h2o.transform(w2v.model, words, aggregate_method = "AVERAGE")
+```
+
+```{r}
+print("Prepare training & validation data (keep only job descriptions made of known words)")
+valid.job.desc <- !is.na(job.desc.vecs$C1)
+df_h2o <- h2o.cbind(
+  md_h2o[valid.job.desc, "Label"], 
+  job.desc.vecs[valid.job.desc, ])
+
+df_h2o$Label <- as.factor(df_h2o$Label)
+data.split <- h2o.splitFrame(df_h2o, ratios = 0.8)
+```
+
+```{r}
+print("Build a basic GBM model")
+gbm.model <- h2o.gbm(x = names(job.desc.vecs),
+                     y = "Label",
+                     training_frame = data.split[[1]],
+                     validation_frame = data.split[[2]], 
+                     balance_classes = TRUE
+                     )
+
+```
+
+```{r}
+print(predict("tableau developer visualization statistics analytics", w2v.model, gbm.model))
+```
+
+```{r}
+h2o.performance(gbm.model, newdata = data.split[[2]])
+```
+
+```{r}
+h2o.varimp_plot(gbm.model)
+```
+
+Inspect C47 further to see what it is telling us
+```{r}
+imp3 <- h2o.varimp(gbm.model) %>% head(3) %>% select(variable) %>% as.vector()
+h2o.partialPlot(gbm.model,data = data.split[[1]],cols = imp3$variable)
+```
+
+Above shows us this the direction to the fill rate
+```{r}
+# words.asfactor().unique().ascharacter()
+# unique_words.col_names = ["Word"]
+unique_words <- words %>% as.data.frame() %>% unique() 
+colnames(unique_words) = 'Word'
+uniqe_words_h2o <- as.h2o(unique_words)
+word_embeddings <- h2o.transform(w2v.model,uniqe_words_h2o, aggregate_method="None")
+word_embeddings_cmb <- h2o.cbind(uniqe_words_h2o,word_embeddings)
+word_embeddings_cmb <- word_embeddings_cmb[!is.na(word_embeddings_cmb$C1),]
+```
+
+```{r}
+###this is most imp var positively correlated to fill rate 
+word_embeddings_cmb %>% 
+  as.data.frame() %>% 
+  arrange(-C57) %>%
+  select(Word, C57) %>%
+  head(15)
+```
+
+```{r Project Manager - build model data}
+###this is most imp var positively correlated to fill rate 
+model_data <- data %>% 
+  filter(!is.na(CLOSE_DT),
+  STAT_MAPP == 'Closed',
+  CLOSE_RSN_MAPP %in% close_rsn_inclusions,
+  Title == 'Project Manager',
+    LaborType == 'Information Technology') %>%
+  select(Description, Avg_CT_Total
+        ) %>%
+    mutate( 
+      Label = ifelse(Avg_CT_Total <= 23,1,0), 
+      Label = ifelse(is.na(Avg_CT_Total),0,1)
+    ) %>%
+  select(Label, Description)
+```
+
+Clean up data
+```{r Clean up Description}
+model_data$Description <- as.character(model_data$Description)
+#strip out all alphanumeric characters from description
+model_data$Description <- gsub("[^[:alnum:] ]", "", model_data$Description)
+#first convert data frame into a h2o frame
+```
+
+Create h2o dataframe
+```{r}
+md_h2o <- as.h2o(model_data)
+```
+
+Break down descriptions into word sequencs 
+```{r}
+print("Break job descriptions into sequence of words")
+words <- tokenize(md_h2o$Description)
+```
+
+Build a word to vec model 
+```{r}
+
+print("Build word2vec model")
+w2v.model <- h2o.word2vec(words, sent_sample_rate = 0, epochs = 10)
+w2v.model
+print("Sanity check - find synonyms for the word 'tableau'")
+print(h2o.findSynonyms(w2v.model, "jira", count = 5))
+```
+
+```{r}
+print("Calculate a vector for each job description")
+#w2v.model <- h2o.getModel('Word2Vec_model_R_1542169298170_1')
+job.desc.vecs <- h2o.transform(w2v.model, words, aggregate_method = "AVERAGE")
+print("Prepare training & validation data (keep only job descriptions made of known words)")
+valid.job.desc <- !is.na(job.desc.vecs$C1)
+df_h2o <- h2o.cbind(
+  md_h2o[valid.job.desc, "Label"], 
+  job.desc.vecs[valid.job.desc, ])
+
+df_h2o$Label <- as.factor(df_h2o$Label)
+data.split <- h2o.splitFrame(df_h2o, ratios = 0.8)
+```
+
+```{r Build GBM Model: PM}
+print("Build a basic GBM model")
+gbm.model <- h2o.gbm(x = names(job.desc.vecs),
+                     y = "Label",
+                     training_frame = data.split[[1]],
+                     validation_frame = data.split[[2]], 
+                     balance_classes = TRUE
+                     )
+h2o.performance(gbm.model, newdata = data.split[[2]])
+
+h2o.varimp(gbm.model)
+```
+
+```{r Word Inspection}
+score_words(words,w2v.model)
+polar_fit_words(gbm.model,5,10)
+```
+
+
+
+```{r PM Auto ML}
+print("Build an Auto ML")
+aml <- h2o.automl(x = names(job.desc.vecs),
+                     y = "Label",
+                     training_frame = data.split[[1]],
+                     validation_frame = data.split[[2]], 
+                     balance_classes = TRUE, 
+                     max_runtime_secs = 600
+                     )
+aml@leaderboard
+h2o.performance(aml@leader, newdata = data.split[[2]])
+h2o.varimp(aml@leader)
+```
+
+```{r Build GBM Model: PM}
+print("Build a basic GBM model")
+gbm.model <- h2o.gbm(x = names(job.desc.vecs),
+                     y = "Label",
+                     training_frame = data.split[[1]],
+                     validation_frame = data.split[[2]], 
+                     balance_classes = TRUE
+                     )
+h2o.performance(gbm.model, newdata = data.split[[2]])
+h2o.varimp(gbm.model)
+```
+
+```{r}
+score_words(words,w2v.model)
+polar_fit_words(gbm.model,4,10)
+```
+```{r}
+model_data %>%
+  
+```
+
